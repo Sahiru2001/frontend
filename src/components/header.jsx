@@ -1,11 +1,12 @@
-import "./header.css"
-import UserData from "./userData"
+import { Link } from "react-router-dom";
 export default function Header() {
      return (
-        <div className = "header">
-            <h1>Crystal Beauty Clear</h1>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Assumenda, veniam quibusdam quos non est harum alias, recusandae similique iure placeat nostrum soluta ab? Ea dolore, ratione praesentium fuga dolores, a facere quasi adipisci, reiciendis nesciunt delectus. Doloribus minus sed repudiandae?</p>
-            <UserData></UserData>
+        <div className = "bg-blue-400 font-bold text-black">
+            <Link to = "/">Home</Link>
+            <Link to = "/login">Login</Link>
+            <Link to = "/signup">Sign Up</Link>
+            
+            
         </div>
     )    
 }
