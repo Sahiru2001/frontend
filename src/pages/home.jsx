@@ -1,6 +1,7 @@
 import Header from '../components/header';
 import { Route, Routes } from 'react-router-dom';
 import ProductPage from './client/productPage';
+import ProductOverview from './client/productOverview';
 export default function HomePage() {
     return (
         <div className = "w-full h-screen bg-gray-300 flex flex-col items-center">
@@ -9,6 +10,7 @@ export default function HomePage() {
             <Routes path = "/*">
                     <Route path = "/" element={<h1>Home</h1>} />
                     <Route path = "/products" element={<ProductPage/>} />
+                    <Route path = "/overview/:id" element={<ProductOverview/>} />
                     <Route path = "/contact" element={<h1>Contact</h1>} />
                     <Route path = "/about" element={<h1>About</h1>} /> 
                     <Route path = "/*" element={<h1>404 Not Found</h1>} />          
