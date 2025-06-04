@@ -1,36 +1,35 @@
-import {useState} from 'react';
-export default function TestPage() {
-   
-    const[count, setCount] = useState(0);
+import { useState } from "react"
+import mediaUpload from "../utils/mediaUpload"
 
-    return (
-        <div className  = "w-full h-screen flex justify-center items-center">
-            <div className = "w-[300px] h-[300px] shadow flex justify-center items-center">
-                <button
-                onClick = {
-                    () => {
-                        setCount(count - 1);
-                    }
-                }
-                className = "bg-blue-500 text-white font-bold text-center w-[100px] h-[50px] text-[20px] cursor-pointer flex flex-col justify-center items-center">
-                    -
-              </button>
 
-              <span className = "text-[30px] font-bold text-center w-[100px] h-[40px] mx-[10px] flex flex-col justify-center item-center">
-                  {count}
-              </span>
+export default function TestPage(){
+    const [image , setImage] = useState(null)
+    
 
-                <button
-                onClick ={
-                    () =>{
-                        setCount(count + 1);
-                    }
-                } className = "bg-blue-500 text-white text-center font-bold w-[100px] h-[50px] text-[20px] cursor-pointer flex flex-col justify-center items-center">
-                    +
-                </button>
 
-                </div>
+    function fileUpload(){
+        
+        mediaUpload(image).then(
+            (res)=>{
+                console.log(res)
+            }
+        ).catch(
+            (res)=>{
+                console.log(res)
+            }
+        )
+        //const url = await mediaUpload(image)
+    }
 
+    return(
+        <div className="w-full h-screen  flex justify-center items-center flex-col">
+            <input type="file" className="file-input file-input-bordered w-full max-w-xs"
+            onChange={(e)=>{
+
+                setImage(e.target.files[0])
+
+            }} />
+            <button onClick={fileUpload} className="bg-green-500 text-white font-bold py-2 px-4 rounded">Upload</button>            
         </div>
-
-    )}
+    )
+}

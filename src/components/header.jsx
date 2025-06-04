@@ -1,12 +1,34 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
 export default function Header() {
+    const navigate = useNavigate();
+    console.log("Header component is loading...");
+    // This component renders the header with navigation links
      return (
-        <div className = "bg-blue-400 font-bold text-black">
-            <Link to = "/">Home</Link>
-            <Link to = "/login">Login</Link>
-            <Link to = "/signup">Sign Up</Link>
+        <header className = "w-full h-[80px] shadow-2xl flex">
+
+            <img 
+            onClick={
+                () =>{                
+                     navigate("/")
+                    
+            }}
+            src = "/logo.png" alt="Logo" className = "w-[80px] h-[80px] object-cover cursor-pointer"/>
+            <div className = "w-[calc(100%-160px)] h-full flex justify-center items-center">
+
+            <Link to = "/" className = "text-[25px] font-bold mx-2">Home</Link>
+            <Link to = "/products"className = "text-[25px] font-bold mx-2">Products</Link>
+            <Link to = "/about"className = "text-[25px] font-bold mx-2">About</Link>
+            <Link to = "/contact" className = "text-[25px] font-bold mx-2">Contact</Link>
+        
+            </div>
+            <div className = "w-[80px] h-full bg-blue-500">
+                </div>
             
             
-        </div>
+        </header>
     )    
 }
+
+
+        
