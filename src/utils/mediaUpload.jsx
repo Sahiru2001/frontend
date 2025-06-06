@@ -18,7 +18,7 @@ export default function mediaUpload(file) {
             }
 
             const timestamp = new Date().getTime();
-            const newName = timeStamp+file.name
+            const newName = timestamp+file.name
 
             supabase.storage.from("images").upload(newName, file, {
                 upsert: false,

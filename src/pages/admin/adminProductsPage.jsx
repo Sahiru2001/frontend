@@ -67,7 +67,7 @@ return(
         <table className = "w-full text-center">
             <thead>
                 <tr>
-                    <th>Productn ID</th>
+                    <th>Product ID</th>
                     <th>Name</th>
                     <th>Image</th>
                     <th>Labled price</th>
