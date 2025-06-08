@@ -5,6 +5,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import ImageSlider from "../../components/imageSlider"
 import Loading from "../../components/loading";
+import { addToCart, getCart } from "../../utils/cart.js";
 export default function ProductOverview() {
     const params =useParams()
     const productId = params.id
@@ -54,15 +55,24 @@ export default function ProductOverview() {
                         {
                             product.labledPrice > product.price ?
                             <div className="w-full flex justify-center items-center my-10">
-                                <span className="text-3xl mx-4 text-black-500 line-through">{"LKR. "+(product.labledPrice.toFixed(2))+" /="}</span>
-                                <span className="text-3xl mx-4 font-bold text-red-500">{"LKR. "+(product.price.toFixed(2))+" /="}</span>
+                                <span className="text-3xl mx-4 text-black-500 line-through">{"Rs. "+(product.labledPrice.toFixed(2))+" /="}</span>
+                                <span className="text-3xl mx-4 font-bold text-red-500">{"Rs. "+(product.price.toFixed(2))+" /="}</span>
                             </div>
-                            :<span className="text-4xl mx-4 font-bold text-red-500">{"LKR. "+(product.price.toFixed(2))+" /="}</span>
+                            :<span className="text-4xl mx-4 font-bold text-red-500">{"Rs. "+(product.price.toFixed(2))+" /="}</span>
                     
                     }
                     <div className="w-full flex justify-center items-center mt-2">
                                 <button className="w-[200px] h-[50px] bg-blue-500 text-white font-bold ml-4 rounded-4xl cursor-pointer hover:bg-blue-500/80 transition-all duration-300">Buy Now</button>
-                                <button className="w-[200px] h-[50px] bg-blue-500 text-white font-bold ml-4 rounded-4xl cursor-pointer hover:bg-blue-500/80 transition-all duration-300">Add to Cart</button>
+                                <button className="w-[200px] h-[50px] bg-blue-500 text-white font-bold ml-4 rounded-4xl cursor-pointer hover:bg-blue-500/80 transition-all duration-300" 
+                                onClick={() => {
+                                        //localStorage.removeItem("cart");
+										console.log("Old cart");
+										console.log(getCart());
+										addToCart(product, 1);
+										console.log("New cart");
+                                        console.log(getCart());
+									}}
+                                            >Add to Cart</button>
                     </div>
 
 

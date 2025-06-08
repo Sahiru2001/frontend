@@ -2,6 +2,7 @@ import Header from '../components/header';
 import { Route, Routes } from 'react-router-dom';
 import ProductPage from './client/productPage';
 import ProductOverview from './client/productOverview';
+import CartPage from './client/cart.jsx';
 export default function HomePage() {
     return (
         <div className = "w-full h-screen bg-gray-300 flex flex-col items-center">
@@ -13,6 +14,7 @@ export default function HomePage() {
                     <Route path = "/overview/:id" element={<ProductOverview/>} />
                     <Route path = "/contact" element={<h1>Contact</h1>} />
                     <Route path = "/about" element={<h1>About</h1>} /> 
+                    <Route path = "/cart" element={<CartPage/>} />
                     <Route path = "/*" element={<h1>404 Not Found</h1>} />          
             </Routes>
 
