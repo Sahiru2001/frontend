@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import { useEffect } from "react"
 import {useState} from "react"
 import axios from "axios";
@@ -11,6 +11,7 @@ export default function ProductOverview() {
     const productId = params.id
     const [status, setStatus] = useState("Loading")
     const [product, setProduct] = useState(null)
+    const navigate =  useNavigate()
 
     useEffect(
         ()=>{
@@ -62,7 +63,30 @@ export default function ProductOverview() {
                     
                     }
                     <div className="w-full flex justify-center items-center mt-2">
-                                <button className="w-[200px] h-[50px] bg-blue-500 text-white font-bold ml-4 rounded-4xl cursor-pointer hover:bg-blue-500/80 transition-all duration-300">Buy Now</button>
+                                <button className="w-[200px] h-[50px] bg-blue-500 text-white font-bold ml-4 rounded-4xl cursor-pointer hover:bg-blue-500/80 transition-all duration-300"
+                                            onClick={()=>{
+              navigate("/checkout", {
+                state:{
+                  cart:[
+                    {
+                      productId: product.productId,
+                      name: product.name,
+                      image: product.images[0],
+                      price: product.price,
+                      labledPrice: product.labledPrice,
+                      qty: 1,
+                     
+
+                  }
+                ]
+
+                  }
+                }
+              )
+            }
+          }
+          
+          >Buy Now</button>
                                 <button className="w-[200px] h-[50px] bg-blue-500 text-white font-bold ml-4 rounded-4xl cursor-pointer hover:bg-blue-500/80 transition-all duration-300" 
                                 onClick={() => {
                                         //localStorage.removeItem("cart");
