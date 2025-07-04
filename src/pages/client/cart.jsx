@@ -66,9 +66,9 @@ export default function CartPage() {
             {/*total price*/}
 
             <div className="w-[200px] h-full flex flex-col justify-center items-end pr-4">
-                <h1 className="text-xl font-bold text-red-700">{"LKR. "+(item.price * item.qty).toFixed(2)}</h1>
+                <h1 className="text-xl font-bold text-red-700">{"Rs. "+(item.price * item.qty).toFixed(2)}</h1>
             </div>
-            <button className="absolute bg-white text-shadow-black cursor-pointer hover:bg-red-500 hover:text-white rounded-full p-2 right-[-50px]"
+            <button className="absolute text-red-600 cursor-pointer hover:bg-red-600 hover:text-white rounded-full p-2 right-[-35px] "
             onClick={()=>{
               removeFromCart(item.productId);
               setCart(getCart());
