@@ -10,7 +10,7 @@ export default function CartPage() {
 
   return(
     <div className="w-full h-full bg-grey-300 flex flex-col items-center pt-4 relative">
-      <div className="w-[400px] h-[80px] shadow-2xl absolute top-1 right-1 flex flex-col justify-center items-center">
+      <div className="z-50 hidden w-[400px] h-[80px] shadow-2xl absolute bottom-1 md:top-1 right-1 md:flex flex-col justify-center items-center">
         <p className="text-2xl text-black-500 font-bold">Total:
           <span className="text-red-700 font-bold mx-2">
            {getTotal().toFixed(2)}
@@ -33,9 +33,9 @@ export default function CartPage() {
   (item) => {
     return (
         
-      <div key={item.productId} className="w-[600px] my-4 h-[100px] rounded-tl-3xl rounded-bl-3xl rounded-br-3xl rounded-tr-3xl flex flex-row relative items-center bg-grey-200 shadow-2xl">
+      <div key={item.productId} className="w-[70%] md:w-[600px] my-4 md:h-[100px] rounded-tl-3xl rounded-bl-3xl rounded-br-3xl rounded-tr-3xl flex flex-col md:flex-row relative items-center bg-grey-200 shadow-2xl p-2 md:pt-0">
         <img src={item.image} className="w-[100px] h-[100px] object-cover rounded-3xl" />
-        <div className="w-[250px] h-full] flex flex-col items-start pl-4">
+        <div className="w-[250px] h-full flex flex-col justify-center items-center md:items-start pl-4">
                 <h1 className="text-xl font-semibold text-black">{item.name}</h1>
                 <h1 className="text-md font-semibold text-black">{item.productId}</h1>
 
@@ -65,7 +65,7 @@ export default function CartPage() {
 
             {/*total price*/}
 
-            <div className="w-[200px] h-full flex flex-col justify-center items-end pr-4">
+            <div className="w-[200px] h-full flex flex-col justify-center items-center md:items-end pr-4">
                 <h1 className="text-xl font-bold text-red-700">{"Rs. "+(item.price * item.qty).toFixed(2)}</h1>
             </div>
             <button className="absolute text-red-600 cursor-pointer hover:bg-red-600 hover:text-white rounded-full p-2 right-[-35px] "
@@ -88,6 +88,24 @@ export default function CartPage() {
 
 
        }
+       
+      <div className="z-50 md:hidden border flex w-full h-[80px] shadow-2xl flex-col justify-center items-center">
+        <p className="text-2xl text-black-500 font-bold">Total:
+          <span className="text-red-700 font-bold mx-2">
+           {getTotal().toFixed(2)}
+           </span>
+
+        </p>
+        < Link to ="/checkout"
+        state={
+          {
+            cart: cart
+          }
+        }
+        className="text-white bg-blue-500 p-2 rounded-lg hover:bg-blue-600 font-bold text-lg">
+        Checkout
+        </Link>
+      </div>
        </div>
        
         

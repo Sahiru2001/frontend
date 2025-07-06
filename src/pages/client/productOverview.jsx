@@ -35,13 +35,24 @@ export default function ProductOverview() {
 
         <>
         {status == "Loaded" && (
-            <div className = "w-full h-full flex">
-                    <div className = "w-[50%] h-full flex justify-center items-center">
+            <div className = "w-full h-full flex flex-col md:flex-row md:max-h-full md:overflow-y-scroll pt-4">
+                <h1 className="w-full md:hidden block text-center text-4xl text-black font-semibold my-4">{product.name}
+                            {
+                                product.altNames.map((altName, index) => {
+                                    return (
+                                        <span key={index} className="text-4xl text-gray-700">{" | "+altName}</span>
+                                    )    
+                                }
+                             )            
+                    }              
+                        </h1>
+
+                    <div className = "w-full md:w-[50%] md:h-full flex justify-center ">
                         <ImageSlider images = {product.images} />
                     </div>
-                    <div className = "w-[50%] justify-center items-center h-full">
+                    <div className = "w-full md:w-[50%] flex justify-center md:h-full">
                         <div className="w-[500px] h-[600px] flex flex-col items-center">
-                        <h1 className="w-full text-center text-4xl text-black font-semibold my-4">{product.name}
+                        <h1 className="w-full hidden md:block text-center text-4xl text-black font-semibold my-4">{product.name}
                             {
                                 product.altNames.map((altName, index) => {
                                     return (
@@ -62,7 +73,7 @@ export default function ProductOverview() {
                             :<span className="text-4xl mx-4 font-bold text-red-500">{"Rs. "+(product.price.toFixed(2))+" /="}</span>
                     
                     }
-                    <div className="w-full flex justify-center items-center mt-2">
+                    <div className="w-full flex flex-col md:flex-row gap-2 justify-center items-center mt-2">
                                 <button className="w-[200px] h-[50px] bg-blue-500 text-white font-bold ml-4 rounded-4xl cursor-pointer hover:bg-blue-500/80 transition-all duration-300"
                                             onClick={()=>{
               navigate("/checkout", {

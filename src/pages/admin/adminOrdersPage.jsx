@@ -1,9 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import Modal from "react-modal";
 import Loading from "../../components/loading";
-
-Modal.setAppElement("#root");
+import Modal from "react-modal";
+import toast from "react-hot-toast";
 
 export default function AdminOrdersPage() {
 	const [orders, setOrders] = useState([]);
@@ -12,120 +11,219 @@ export default function AdminOrdersPage() {
 	const [activeOrder, setActiveOrder] = useState(null);
 
 	useEffect(() => {
-		const token = localStorage.getItem("token");
-		if (!token) {
-			alert("Please login first");
-			return;
+		if (isLoading) {
+			const token = localStorage.getItem("token");
+			if (!token) {
+				alert("Please login first");
+				return;
+			}
+			axios
+				.get(import.meta.env.VITE_BACKEND_URL + "/api/orders", {
+					headers: {
+						Authorization: "Bearer " + token,
+					},
+				})
+				.then((res) => {
+					setOrders(res.data);
+					setIsLoading(false);
+				})
+				.catch((e) => {
+					alert(
+						"Error fetching orders: " +
+							(e.response?.data?.message || "Unknown error")
+					);
+					setIsLoading(false);
+				});
 		}
-		axios
-			.get(import.meta.env.VITE_BACKEND_URL + "/api/orders", {
-				headers: { Authorization: "Bearer " + token },
-			})
-			.then((res) => {
-				setOrders(res.data);
-				setIsLoading(false);
-			})
-			.catch((e) => {
-				alert("Error fetching orders: " + (e.response?.data?.message || "Unknown error"));
-				setIsLoading(false);
-			});
-	}, []);
-
-	const renderOrderDetails = () => {
-		if (activeOrder === null) return null;
-		const order = orders[activeOrder];
-		return (
-			<div className="p-4 space-y-4 max-h-[80vh] overflow-y-auto">
-				<h2 className="text-xl font-bold mb-2">Order Details - {order.orderId}</h2>
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-					<p><strong>Name:</strong> {order.name}</p>
-					<p><strong>Email:</strong> {order.email}</p>
-					<p><strong>Phone:</strong> {order.phone}</p>
-					<p><strong>Address:</strong> {order.address}</p>
-					<p><strong>Date:</strong> {new Date(order.date).toLocaleString()}</p>
-					<p><strong>Status:</strong> {order.status}</p>
-					<p><strong>Total:</strong> Rs. {order.total?.toFixed(2)}</p>
-					{order.labledTotal && (
-						<p><strong>Labeled Total:</strong> Rs. {order.labledTotal.toFixed(2)}</p>
-					)}
-				</div>
-
-				{order.products?.length > 0 ? (
-					<div className="mt-4">
-						<h3 className="text-lg font-semibold mb-2">Products</h3>
-						<div className="grid gap-4">
-							{order.products.map((product, idx) => {
-								const p = product.productInfo;
-								return (
-									<div key={product._id} className="border p-3 rounded shadow-sm bg-white">
-										<div className="flex gap-4">
-											<img
-												src={p.images[0]}
-												alt={p.name}
-												className="w-20 h-20 object-cover rounded"
-											/>
-											<div className="flex-1 space-y-1 text-sm">
-												<p><strong>{p.name}</strong></p>
-												<p>{p.description}</p>
-												<p><strong>Quantity:</strong> {product.quantity}</p>
-												<p>
-													<strong>Price:</strong> Rs. {p.price} &nbsp;
-													{p.labledPrice && (
-														<span className="line-through text-red-500 text-xs">
-															Rs. {p.labledPrice}
-														</span>
-													)}
-												</p>
-												<p className="text-xs text-gray-500">
-													Other names: {p.altNames.join(", ")}
-												</p>
-											</div>
-										</div>
-									</div>
-								);
-							})}
-						</div>
-					</div>
-				) : (
-					<p className="mt-4 text-gray-500 italic">No products in this order.</p>
-				)}
-			</div>
-		);
-	};
+	}, [isLoading]);
 
 	return (
-		<div className="w-full h-full max-h-screen overflow-y-auto p-4 bg-gray-50">
+		<div className="w-full h-full max-h-full overflow-y-auto p-4 font-[var(--font-main)]">
 			{isLoading ? (
 				<Loading />
 			) : (
 				<div className="overflow-x-auto">
+					{/* Modal for order details */}
 					<Modal
 						isOpen={isModalOpen}
 						onRequestClose={() => setIsModalOpen(false)}
-						className="max-w-3xl mx-auto my-10 bg-white rounded-lg shadow-lg p-6 outline-none"
-						overlayClassName="fixed inset-0 bg-[#00000040] bg-opacity-50 flex justify-center items-start overflow-y-auto z-50"
+						className="bg-white rounded-lg shadow-lg max-w-3xl mx-auto my-10 p-6 outline-none"
+						overlayClassName="fixed inset-0 bg-[#00000040] flex justify-center items-center"
 					>
-						{renderOrderDetails()}
-						<div className="text-right mt-4">
-							<button
-								className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-								onClick={() => setIsModalOpen(false)}
-							>
-								Close
-							</button>
-						</div>
+						{activeOrder && (
+							<div className="space-y-4">
+								<h2 className="text-2xl font-bold text-[var(--color-accent)]">
+									Order Details - {activeOrder.orderId}
+								</h2>
+								<div className="grid grid-cols-2 gap-4">
+									<div>
+										<p>
+											<span className="font-semibold">Name:</span>{" "}
+											{activeOrder.name}
+										</p>
+										<p>
+											<span className="font-semibold">Email:</span>{" "}
+											{activeOrder.email}
+										</p>
+										<p>
+											<span className="font-semibold">Phone:</span>{" "}
+											{activeOrder.phone}
+										</p>
+										<p>
+											<span className="font-semibold">Address:</span>{" "}
+											{activeOrder.address}
+										</p>
+									</div>
+									<div>
+										<p>
+											<span className="font-semibold">Status:</span>{" "}
+											<span
+												className={`font-bold ${
+													activeOrder.status === "pending"
+														? "text-yellow-500"
+														: activeOrder.status === "completed"
+														? "text-green-600"
+														: "text-red-500"
+												}`}
+											>
+												{activeOrder.status.toUpperCase()}
+											</span>
+											<select
+												onChange={async (e) => {
+													const updatedValue = e.target.value;
+													try {
+														const token = localStorage.getItem("token");
+														await axios.put(
+															import.meta.env.VITE_BACKEND_URL +
+																"/api/orders/" +
+																activeOrder.orderId +
+																"/" +
+																updatedValue,
+															{},
+															{
+																headers: {
+																	Authorization: "Bearer " + token,
+																},
+															}
+														);
+														
+														setIsLoading(true);
+														const updatedOrder = {...activeOrder};
+														updatedOrder.status = updatedValue;
+														setActiveOrder(updatedOrder);
+
+													} catch (e) {
+														toast.error("Error updating order status")
+														console.log(e)
+													}
+												}}
+											>
+												<option selected disabled>
+													Change status
+												</option>
+												<option value="pending">Pending</option>
+												<option value="completed">Completed</option>
+												<option value="cancelled">Cancelled</option>
+												<option value="returned">Returned</option>
+											</select>
+										</p>
+										<p>
+											<span className="font-semibold">Date:</span>{" "}
+											{new Date(activeOrder.date).toLocaleDateString("en-GB")}
+										</p>
+										<p>
+											<span className="font-semibold">Total:</span>{" "}
+											{activeOrder.total.toLocaleString("en-LK", {
+												style: "currency",
+												currency: "LKR",
+											})}
+										</p>
+										<p>
+											<span className="font-semibold">Labled Total:</span>{" "}
+											{activeOrder.labledTotal.toLocaleString("en-LK", {
+												style: "currency",
+												currency: "LKR",
+											})}
+										</p>
+									</div>
+								</div>
+
+								<h3 className="text-xl font-semibold mt-4">Products</h3>
+								<table className="w-full text-center border border-gray-200 shadow rounded">
+									<thead className="bg-[var(--color-accent)] text-white">
+										<tr>
+											<th className="py-2 px-2">Image</th>
+											<th className="py-2 px-2">Product</th>
+											<th className="py-2 px-2">Price</th>
+											<th className="py-2 px-2">Quantity</th>
+											<th className="py-2 px-2">Subtotal</th>
+										</tr>
+									</thead>
+									<tbody>
+										{activeOrder.products.map((item, idx) => (
+											<tr
+												key={idx}
+												className={`${
+													idx % 2 === 0
+														? "bg-[var(--color-primary)]"
+														: "bg-gray-100"
+												}`}
+											>
+												<td className="py-2 px-2">
+													<img
+														src={item.productInfo.images[0]}
+														alt={item.productInfo.name}
+														className="w-12 h-12 object-cover rounded"
+													/>
+												</td>
+												<td className="py-2 px-2">{item.productInfo.name}</td>
+												<td className="py-2 px-2">
+													{item.productInfo.price.toLocaleString("en-LK", {
+														style: "currency",
+														currency: "LKR",
+													})}
+												</td>
+												<td className="py-2 px-2">{item.quantity}</td>
+												<td className="py-2 px-2">
+													{(
+														item.productInfo.price * item.quantity
+													).toLocaleString("en-LK", {
+														style: "currency",
+														currency: "LKR",
+													})}
+												</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+								<div className="flex justify-end">
+									<button
+										onClick={() => setIsModalOpen(false)}
+										className="mt-4 px-4 py-2 bg-[var(--color-accent)] text-white rounded hover:bg-[var(--color-secondary)] transition"
+									>
+										Close
+									</button>
+									<button
+										onClick={() => window.print()}
+										className="mt-4 px-4 py-2 bg-[var(--color-accent)] text-white rounded hover:bg-[var(--color-secondary)] transition"
+									>
+										Print
+									</button>
+								</div>
+							</div>
+						)}
 					</Modal>
-					<table className="min-w-full border-collapse bg-white shadow-md rounded-md overflow-hidden text-sm">
-						<thead className="bg-gray-100 text-gray-700 uppercase text-xs">
+
+					<table className="w-full text-center border border-gray-200 shadow-md rounded-lg overflow-hidden">
+						<thead className="bg-[var(--color-accent)] text-white">
 							<tr>
-								<th className="px-4 py-3 text-left">Order Id</th>
-								<th className="px-4 py-3 text-left">Name</th>
-								<th className="px-4 py-3 text-left">Email</th>
-								<th className="px-4 py-3 text-left">Phone No</th>
-								<th className="px-4 py-3 text-left">Address</th>
-								<th className="px-4 py-3 text-left">Total</th>
-								<th className="px-4 py-3 text-left">Date</th>
-								<th className="px-4 py-3 text-left">Status</th>
+								<th className="py-3 px-2">Order ID</th>
+								<th className="py-3 px-2">Name</th>
+								<th className="py-3 px-2">Email</th>
+								<th className="py-3 px-2">Phone</th>
+								<th className="py-3 px-2">Total (Rs)</th>
+								<th className="py-3 px-2">Date</th>
+								<th className="py-3 px-2">Status</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -133,26 +231,39 @@ export default function AdminOrdersPage() {
 								<tr
 									key={index}
 									onClick={() => {
+										setActiveOrder(order);
 										setIsModalOpen(true);
-										setActiveOrder(index);
 									}}
-									className="border-b hover:bg-gray-50 cursor-pointer"
+									className={`cursor-pointer ${
+										index % 2 === 0
+											? "bg-[var(--color-primary)]"
+											: "bg-gray-100"
+									} hover:bg-gray-200 transition`}
 								>
-									<td className="px-4 py-2">{order.orderId}</td>
-									<td className="px-4 py-2">{order.name}</td>
-									<td className="px-4 py-2">{order.email}</td>
-									<td className="px-4 py-2">{order.phone}</td>
-									<td className="px-4 py-2">{order.address}</td>
-									<td className="px-4 py-2 font-semibold text-green-700">
-										{order.total?.toFixed(2)}
+									<td className="py-2 px-2">{order.orderId}</td>
+									<td className="py-2 px-2">{order.name}</td>
+									<td className="py-2 px-2">{order.email}</td>
+									<td className="py-2 px-2">{order.phone}</td>
+									<td className="py-2 px-2">
+										{order.total.toLocaleString("en-LK", {
+											style: "currency",
+											currency: "LKR",
+										})}
 									</td>
-									<td className="px-4 py-2">
-										{new Date(order.date).toLocaleDateString()}
+									<td className="py-2 px-2">
+										{new Date(order.date).toLocaleDateString("en-GB")}
 									</td>
-									<td className="px-4 py-2">
-										<span className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">
-											{order.status}
-										</span>
+									<td
+										className={`py-2 px-2 font-semibold ${
+											order.status === "pending"
+												? "text-yellow-500"
+												: order.status === "completed"
+												? "text-green-600"
+												: "text-red-500"
+										}`}
+									>
+										{order.status.charAt(0).toUpperCase() +
+											order.status.slice(1)}
 									</td>
 								</tr>
 							))}
