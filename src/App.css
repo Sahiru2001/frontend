@@ -1,0 +1,26 @@
+const transport = nodemailer.createTransport({
+    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: "sahirusandeepa52@gmail.com",
+        pass: "quofduvnugllgimo"
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+})
+
+
+
+const transport = nodemailer.createTransport({
+    service: 'gmail',
+    host : 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    auth: {
+        user: "malithdilshan27@gmail.com",
+        pass: "javyzfzydwsdrmbg"
+    }
+})
