@@ -4,9 +4,40 @@ import AdminProductsPage from "./admin/adminProductsPage";
 import AddProductPage from "./admin/addProductPage";
 import EditProductPage from "./admin/productsEdit";
 import AdminOrdersPage from "./admin/adminOrdersPage";
+import { useState, useEffect, use } from "react";
+import toast from "react-hot-toast";
+import Loading from "../components/loading";
 export default function AdminPage() {
     const location = useLocation();
     const path = location.pathname;
+    const [status, setStatus] = useState("loading");
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            setStatus("unauthorized");
+            window.location.href = "/login";
+    } else {
+      axios.get(import.meta.env.VITE_BACKEND_URL + "/api/users", {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }).then((response) => {
+        if (response.data.role !== "admin") {
+            setStatus("unauthorized");
+            toast.error("You are not authorized to access this page");
+            window.location.href = "/";
+        } else {
+            setStatus("authorized");
+        }
+    }).catch((error) => {
+        console.error("Error fetching user data:", error);
+        setStatus("unauthorized");
+        toast.error("You are not authorized to access this page");
+        window.location.href = "/login";
+    });
+}
+}, [status]);
 
     function getClass(name){
         if(path.includes(name)){
@@ -17,6 +48,9 @@ export default function AdminPage() {
     }
     return (
         <div className = "w-full h-screen flex bg-blue-500">
+            {status == "loading"|| status == "unauthorized"?
+            <Loading /> :
+            <>
             <div className="h-full w-[300px] text-blue-500 bg-white font-bold text-xl flex flex-col">
                 <Link className={getClass("products")} to ="/admin/products">Products</Link>
                 <Link className={getClass("users")} to ="/admin/users">Users</Link>
@@ -34,7 +68,7 @@ export default function AdminPage() {
                     <Route path = "/edit-product" element={<EditProductPage/>} />
                 </Routes>
                 </div>
-        
+</>}
         </div>
     );
 }
