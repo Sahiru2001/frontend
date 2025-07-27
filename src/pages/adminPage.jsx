@@ -4,9 +4,10 @@ import AdminProductsPage from "./admin/adminProductsPage";
 import AddProductPage from "./admin/addProductPage";
 import EditProductPage from "./admin/productsEdit";
 import AdminOrdersPage from "./admin/adminOrdersPage";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import Loading from "../components/loading";
+import axios from "axios";
 export default function AdminPage() {
     const location = useLocation();
     const path = location.pathname;
