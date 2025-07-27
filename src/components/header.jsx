@@ -31,7 +31,7 @@ export default function Header() {
             <Link to = "/search" className = "text-[25px] font-bold mx-2">Search</Link>
         
             </div>
-            <div className = "w-[160px] hidden md:flex justify-center items-center">
+            <div className = "w-[160px] bg-blue-500 hidden md:flex justify-center items-center">
                 {
                     token == null?
                     <Link to = "/login" className = "text-[20px] font-bold mx-2">Login</Link>
