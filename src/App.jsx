@@ -2,7 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import HomePage from './pages/home'
 import LoginPage from './pages/login'
-import AdminPage from './pages/adminpage'
+import AdminPage from './pages/adminPage'
 import TestPage from './pages/testPage'
 import RegisterPage from './pages/register'
 import { Toaster } from 'react-hot-toast'
@@ -40,6 +40,4 @@ function App() {
 export default App
 
 
-//https://vjvaprvmvskxfaemyboe.supabase.co
 
-//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZqdmFwcnZtdnNreGZhZW15Ym9lIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MTkwMDcsImV4cCI6MjA2Mzk5NTAwN30.NNXt6qcwG0zpimwuAUAq5VcMA5GmydrsHCEhxOVAcO4
