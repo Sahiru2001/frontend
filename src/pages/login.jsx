@@ -30,6 +30,17 @@ export default function LoginPage(){
         }
     })
 
+    window.addEventListener("message", (event) => {
+  if (event.origin === "https://cbc-backend-batch-five-m79k.onrender.com") {
+    // Handle login success
+    console.log("Logged in:", event.data);
+  }
+});
+window.opener.postMessage({ success: true, user }, "https://frontend-1drg.vercel.app/");
+window.close(); // still works from inside the popup
+
+
+
 
     async function handleLogin(){
         try{
